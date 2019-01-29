@@ -45,7 +45,7 @@ namespace EmployeeManagementSystem.Migrations
 
                     b.Property<string>("ContactNumber")
                         .IsRequired()
-                        .HasMaxLength(12);
+                        .HasMaxLength(10);
 
                     b.Property<int>("DeptId");
 
@@ -54,7 +54,6 @@ namespace EmployeeManagementSystem.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("Qualification")
-                        .IsRequired()
                         .HasMaxLength(20);
 
                     b.Property<string>("Surname")

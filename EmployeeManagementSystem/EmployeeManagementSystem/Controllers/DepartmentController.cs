@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EmployeeManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -16,10 +17,13 @@ namespace EmployeeManagementSystem.Controllers
         {
             using (var context = new EmployeeManagementContext())
             {
-                var model = await context.Departments.AsNoTracking().ToListAsync();
+                //var model = await context.Departments.AsNoTracking().ToListAsync();
+
+                var model = await context.Departments.Include(a => a.Employees).AsNoTracking().ToListAsync();
+
+                //var employees = await context.Employees.Include(a => a.Department).AsNoTracking().ToListAsync();
                 return View(model);
             }
-
         }
 
         [HttpGet]
@@ -38,8 +42,6 @@ namespace EmployeeManagementSystem.Controllers
                 {
                     context.Add(department);
                     await context.SaveChangesAsync();
-                    //return RedirectToAction("Index");
-                    //return View(author);
                 }
                 return RedirectToAction("Index");
             }
@@ -82,7 +84,7 @@ namespace EmployeeManagementSystem.Controllers
                 return View(department);
             }
         }
-        
+
         // POST: Author/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -129,8 +131,7 @@ namespace EmployeeManagementSystem.Controllers
             }
             using (var context = new EmployeeManagementContext())
             {
-                var department = await context.Departments
-                .FirstOrDefaultAsync(m => m.DeptId == id);
+                var department = await context.Departments.FirstOrDefaultAsync(m => m.DeptId == id);
 
                 if (department == null)
                 {
@@ -148,13 +149,26 @@ namespace EmployeeManagementSystem.Controllers
         {
             using (var context = new EmployeeManagementContext())
             {
-                var author = await context.Departments.FindAsync(id);
-                context.Departments.Remove(author);
-                await context.SaveChangesAsync();
+                //var department = await context.Departments.FindAsync(id);
+                var department = await context.Departments.Include(a => a.Employees).FirstOrDefaultAsync(m => m.DeptId == id);
 
-                return RedirectToAction(nameof(Index));
+                if (department.Employees.Count == 0)
+                {
+                    context.Departments.Remove(department);
+                    await context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.Message = "Record can not deleted foreign key violation";
+                    return View();
+                    //throw new Exception("Record can not deleted foreign key violation");
+                    //return RedirectToAction(nameof(Index));
+                }
             }
+
         }
+
 
         private bool DepartmentExists(int id)
         {

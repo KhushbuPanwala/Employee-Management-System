@@ -11,15 +11,11 @@ namespace EmployeeManagementSystem.Models
         [Key]
         public int DeptId { get; set; }
 
-        
-        //[StringLength(50)]
-        [Display(Name = "Department Name")]
-        //[Required(ErrorMessage = "Department Name is required")]
         [Required]
-        [StringLength(50, MinimumLength = 3)]
-        //[RegularExpression("^[^<>'\"]+$", ErrorMessage = "Special Character Don't allowance.")]
+        [StringLength(50)]
+        [Display(Name = "Department Name")]
         public string DeptName { get; set; }
-
+        [Display(Name = "Employees Name")]
         public ICollection<Employee> Employees { get; set; } = new List<Employee>();
     }
 }

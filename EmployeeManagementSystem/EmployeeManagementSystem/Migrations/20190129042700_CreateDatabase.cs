@@ -29,8 +29,8 @@ namespace EmployeeManagementSystem.Migrations
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Surname = table.Column<string>(maxLength: 70, nullable: false),
                     Address = table.Column<string>(maxLength: 200, nullable: false),
-                    Qualification = table.Column<string>(maxLength: 20, nullable: false),
-                    ContactNumber = table.Column<string>(maxLength: 12, nullable: false),
+                    Qualification = table.Column<string>(maxLength: 20, nullable: true),
+                    ContactNumber = table.Column<string>(maxLength: 10, nullable: false),
                     DeptId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
